@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import AsyncSelect from "react-select/async";
 
 import AreaChart from "./components/chart";
+import { getPrices, getRanges, getSymbols } from "./utils";
 
 export default function Home() {
   const [selectedOption, setSelectedOption] = useState<any>({});
@@ -24,7 +25,9 @@ export default function Home() {
   useEffect(() => {
     if (selectedOption.value) {
       getPrices(selectedOption.value, interval)
-        .then((res) => setData(res.results))
+        .then((res) => {
+          setData(res.results);
+        })
         .catch((err) => console.log(err));
     }
   }, [selectedOption, interval]);
@@ -39,7 +42,9 @@ export default function Home() {
           defaultOptions
           loadOptions={promiseOptions}
           placeholder="Search stock options"
-          noOptionsMessage={(val) => `No data found for ${val.inputValue}`}
+          noOptionsMessage={(val) =>
+            val.inputValue && `No data found for ${val.inputValue}`
+          }
         />
       </div>
 
@@ -78,51 +83,4 @@ export default function Home() {
       </div>
     </main>
   );
-}
-
-function getRanges(ranges) {
-  const validRanges = [
-    "1m",
-    "2m",
-    "5m",
-    "15m",
-    "30m",
-    "60m",
-    "90m",
-    "1h",
-    "1d",
-    "5d",
-    "1wk",
-    "1mo",
-    "3mo",
-  ];
-
-  const filteredArray = validRanges.filter((value) => ranges.includes(value));
-
-  return filteredArray;
-}
-
-function getSymbols(symbol: string) {
-  const url = `/api/stock-symbols?symbol=${symbol}`;
-
-  return fetch(url)
-    .then((i) => i.json())
-    .then((res) =>
-      res.results
-        .filter((i: any) => i.isYahooFinance)
-        .map((i: any) => ({
-          label: `${i.symbol}, ${i.shortname}`,
-          value: i.symbol,
-        }))
-    )
-    .catch((err) => console.log(err));
-}
-
-function getPrices(symbol: string, interval: string) {
-  const url = `/api/stock-prices?symbol=${symbol}&interval=${interval}`;
-
-  return fetch(url)
-    .then((i) => i.json())
-    .then((res) => res)
-    .catch((err) => console.log(err));
 }

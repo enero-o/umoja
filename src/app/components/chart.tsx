@@ -2,9 +2,10 @@
 import React from "react";
 
 import { LineChart, Line, ResponsiveContainer } from "recharts";
+import type { Quote } from "../interfaces";
 
 interface IProps {
-  data: any[];
+  data: Quote[];
 }
 
 export default function Chart(props: IProps) {

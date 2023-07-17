@@ -2,12 +2,19 @@
 import React, { useEffect, useState } from "react";
 import AsyncSelect from "react-select/async";
 
-import AreaChart from "./components/chart";
-import { getPrices, getRanges, getSymbols, formatMoney } from "./utils";
+import Chart from "./components/chart";
+import {
+  getPrices,
+  getRanges,
+  getSymbols,
+  formatMoney,
+  computeRate,
+} from "./utils";
+import type { Price } from "./interfaces";
 
 export default function Home() {
   const [selectedOption, setSelectedOption] = useState<any>({});
-  const [data, setData] = useState<any>("");
+  const [data, setData] = useState<Price>({ meta: {} as any, quotes: [] });
   const [interval, setInterval] = useState<string>("1d");
 
   const promiseOptions = (inputValue: string) => {
@@ -34,7 +41,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen text-black flex-col p-10 bg-white">
-      <p className="text-xs">* search stock symbol</p>
+      <p className="text-xs">search stocks, ex paypal</p>
       <div className="mb-20 text-center  lg:text-left">
         <AsyncSelect
           defaultValue={selectedOption}
@@ -56,7 +63,7 @@ export default function Home() {
       </div>
 
       <div>
-        {data && (
+        {data.quotes.length > 0 && (
           <div>
             <div>
               <h1 className="text-2xl">{data.meta?.symbol}</h1>
@@ -65,13 +72,12 @@ export default function Home() {
               </h1>
 
               <p className="text-sm">
-                {formatMoney.format(data.quotes[0].open - data.quotes[0].close)}{" "}
-                Today
+                {formatMoney.format(computeRate(data.quotes))} Today
               </p>
             </div>
 
             <div className="mt-10">
-              <AreaChart data={data.quotes} />
+              <Chart data={data.quotes} />
             </div>
 
             <div className="max-w-md mt-10">

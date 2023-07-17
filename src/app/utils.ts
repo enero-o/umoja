@@ -15,7 +15,7 @@ export function getRanges(ranges) {
     "3mo",
   ];
 
-  const filteredArray = validRanges.filter((value) => ranges.includes(value));
+  const filteredArray = validRanges.filter((value) => ranges?.includes(value));
 
   return filteredArray;
 }
@@ -49,3 +49,9 @@ export const formatMoney = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
+
+export function computeRate(quotes: any[]) {
+  const lastIndex = quotes.length - 1;
+  const lastItem = quotes[lastIndex];
+  return lastItem?.open - lastItem?.close;
+}

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import AsyncSelect from "react-select/async";
 
 import AreaChart from "./components/chart";
-import { getPrices, getRanges, getSymbols } from "./utils";
+import { getPrices, getRanges, getSymbols, formatMoney } from "./utils";
 
 export default function Home() {
   const [selectedOption, setSelectedOption] = useState<any>({});
@@ -33,7 +33,8 @@ export default function Home() {
   }, [selectedOption, interval]);
 
   return (
-    <main className="flex min-h-screen flex-col p-24">
+    <main className="flex min-h-screen text-black flex-col p-10 bg-white">
+      <p className="text-xs">* search stock symbol</p>
       <div className="mb-20 text-center  lg:text-left">
         <AsyncSelect
           defaultValue={selectedOption}
@@ -45,6 +46,12 @@ export default function Home() {
           noOptionsMessage={(val) =>
             val.inputValue && `No data found for ${val.inputValue}`
           }
+          styles={{
+            placeholder: (baseStyles) => ({
+              ...baseStyles,
+              color: "black",
+            }),
+          }}
         />
       </div>
 
@@ -53,7 +60,14 @@ export default function Home() {
           <div>
             <div>
               <h1 className="text-2xl">{data.meta?.symbol}</h1>
-              <h1 className="text-3xl">${data.meta?.regularMarketPrice}</h1>
+              <h1 className="text-3xl">
+                {formatMoney.format(data.meta?.regularMarketPrice)}
+              </h1>
+
+              <p className="text-sm">
+                {formatMoney.format(data.quotes[0].open - data.quotes[0].close)}{" "}
+                Today
+              </p>
             </div>
 
             <div className="mt-10">

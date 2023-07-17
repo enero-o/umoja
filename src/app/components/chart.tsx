@@ -11,13 +11,7 @@ export default function Chart(props: IProps) {
   const { data } = props;
 
   return (
-    <div
-      style={{
-        height: "50vh",
-        backgroundColor: "white",
-        padding: 10,
-      }}
-    >
+    <div className="container h-96 bg-gray-100">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart width={300} height={100} data={data}>
           <Line

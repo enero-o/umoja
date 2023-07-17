@@ -44,3 +44,8 @@ export function getPrices(symbol: string, interval: string) {
     .then((res) => res)
     .catch((err) => console.log(err));
 }
+
+export const formatMoney = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});

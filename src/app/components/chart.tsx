@@ -3,7 +3,13 @@ import React from "react";
 
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 
-export default function Chart({ data }) {
+interface IProps {
+  data: any[];
+}
+
+export default function Chart(props: IProps) {
+  const { data } = props;
+
   return (
     <div
       style={{
